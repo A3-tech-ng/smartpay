@@ -1,0 +1,189 @@
+================================================================================
+                            FINAL YEAR PROJECT PROPOSAL
+================================================================================
+
+PROJECT TITLE:
+SmartPay: A Cloud-Synchronized, Dual-Factor Biometric Mobile Wallet and Financial 
+Management Application Using Flutter and Supabase
+
+NATIONAL DIPLOMA IN COMPUTER SCIENCE PROGRAMME:
+Bachelor of Science / B.Eng in Computer Science / Software Engineering
+
+STUDENT NAME: [Your Full Name / Matriculation Number]
+PROJECT SUPERVISOR: [Supervisor's Name and Title]
+DATE OF SUBMISSION: July 2026
+
+================================================================================
+1. ABSTRACT / EXECUTIVE SUMMARY
+================================================================================
+The rapid proliferation of mobile financial services has transformed how individuals manage personal wealth, transfer funds, and pay for daily utilities. However, traditional mobile banking applications continue to suffer from critical security vulnerabilities—primarily over-reliance on static PINs or passwords that are susceptible to shoulder surfing, phishing, and SIM swapping. Furthermore, many mobile wallets lack seamless cloud synchronization across multiple user devices without creating excessive friction or compromising security barriers.
+
+This project proposes "SmartPay," an advanced, secure, and cross-device mobile wallet application built using Flutter and powered by a Supabase PostgreSQL cloud infrastructure. SmartPay introduces a strict Dual-Factor Authentication architecture combining native hardware-backed local biometrics (Fingerprint verification) with secure application-level PIN validation. Beyond robust gatekeeping, SmartPay provides a full suite of next-generation financial tools: real-time peer-to-peer account transfers, a locked high-yield Safebox savings vault, instant micro-loan management, QR code scan-to-pay capabilities, a utility bill payment hub, and comprehensive security audit logging. By allowing users to securely access their accounts across any mobile device with cross-device session synchronization, SmartPay bridges the gap between high-security financial gatekeeping and seamless user experience.
+
+================================================================================
+2. BACKGROUND & STATEMENT OF THE PROBLEM
+================================================================================
+In contemporary fintech engineering, security and accessibility frequently exist at opposite ends of a spectrum. Existing mobile wallets face several limitations:
+1. Vulnerability of Static Credentials: Single-factor PIN entry exposes users to visual interception in public spaces and credential stuffing attacks.
+2. Device-Locked Silos: Many modern payment apps lock accounts strictly to a single physical device IMEI or installation instance. When a user changes phones or needs to access their funds from a secondary mobile device, they face complex re-registration barriers or total lockouts.
+3. Fragmented Financial Management: Standard payment wallets focus solely on transfers and payments, requiring users to install separate applications for disciplined savings vaults or emergency micro-loans.
+4. Lack of Biometric Auditability: Users rarely have visibility into failed or unauthorized login attempts occurring on their financial accounts across different devices.
+
+================================================================================
+3. AIMS AND OBJECTIVES
+================================================================================
+3.1 GENERAL AIM
+The general aim of this project is to design, develop, and deploy a secure, responsive, and cross-device mobile financial application (SmartPay) that leverages hardware-backed biometric security and real-time cloud database synchronization.
+
+3.2 SPECIFIC OBJECTIVES
+1. Dual-Factor Security Gatekeeping: To implement a multi-layered authentication workflow combining hardware-level fingerprint scanning (via local_auth) and encrypted PIN verification.
+2. Cross-Device Account Portability: To engineer a flexible account discovery and login system allowing users to securely log into their exact cloud profile from any mobile phone where SmartPay is installed.
+3. Real-Time Financial Ledger: To build a high-speed transaction processing engine capable of executing peer-to-peer account transfers, bank deposits, and withdrawals with instantaneous balance updates.
+4. Value-Added Wealth Tools: To construct a "Safebox" savings vault for locked funds preservation and a "Loan Management" engine for automated micro-credit disbursement and repayment tracking.
+5. Utility & Retail Integration: To incorporate a comprehensive utility payment hub (Airtime, Data, Electricity, Cable TV, and Sports Betting) alongside a dynamic QR Code generator and camera scanner for retail checkout points.
+6. Security Auditing: To implement a cloud-based audit trail (`biometric_login_logs`) that records every login attempt, method, success state, and device platform metadata for forensic auditing.
+
+================================================================================
+4. SIGNIFICANCE & JUSTIFICATION OF THE STUDY
+================================================================================
+This research and development effort offers significant academic and practical value:
+• For End Users: Delivers a premium, intuitive financial dashboard with state-of-the-art security that protects funds even if a physical device is lost or compromised.
+• For Software Engineering & Fintech: Demonstrates a scalable architectural pattern for integrating cross-platform Flutter clients with serverless cloud relational databases (Supabase), eliminating complex custom middleware while maintaining Row Level Security (RLS).
+• For Financial Inclusion: Demonstrates how micro-savings (Safebox) and instant credit algorithms can be cleanly embedded inside everyday payment workflows.
+
+================================================================================
+5. SCOPE AND LIMITATIONS
+================================================================================
+5.1 SCOPE OF THE PROJECT
+• Development of a cross-platform Flutter application targeting Android and iOS.
+• Integration with a cloud Supabase PostgreSQL instance for real-time profile, transaction, and audit logging.
+• Implementation of local hardware biometric scanning (Fingerprint) and PIN authentication.
+• Cross-device login capabilities ensuring seamless multi-phone accessibility.
+• Financial simulation of transfers, savings vaults, micro-loans, and utility bill purchases.
+
+5.2 LIMITATIONS
+• Hardware Dependence: Fingerprint authentication requires the host device to possess functional biometric hardware (`local_auth` hardware availability). On unsupported devices, the application gracefully falls back to secure PIN verification.
+• Clearing Network Sandbox: External inter-bank settlements and real-world utility vendor APIs are simulated using realistic transaction state management rather than live banking clearing nodes.
+
+================================================================================
+6. METHODOLOGY & SYSTEM ARCHITECTURE
+================================================================================
+The project adopts the Agile Software Development methodology, iterating through continuous cycles of requirement analysis, architectural design, component development, and regression testing.
+
+6.1 CLIENT-SERVER ARCHITECTURE
++-------------------------------------------------------------------------+
+|                          SMARTPAY MOBILE CLIENT                         |
+|  (Flutter SDK ^3.11.5 | Material 3 Design System | Provider State)      |
++-------------------------------------------------------------------------+
+       |                         |                          |
+       | Local Hardware          | Cross-Device             | Real-Time
+       v                         v                          v
++--------------+      +---------------------+    +------------------------+
+|  local_auth  |      |   Supabase Auth &   |    |  Supabase PostgreSQL   |
+| Fingerprint  |      |  Session Validator  |    |  Cloud Ledger Database |
+| Hardware API |      |  (Phone & PIN Check)|    | (Profiles/Transactions)|
++--------------+      +---------------------+    +------------------------+
+
+6.2 FRONTEND TECHNOLOGY STACK
+• Framework: Flutter (Dart SDK ^3.11.5) for high-performance 60 FPS rendering.
+• State Management: Provider pattern for decoupled, reactive UI updates.
+• Hardware Integration: `local_auth` for biometrics, `mobile_scanner` & `qr_flutter` for dynamic QR operations.
+• Aesthetics: Google Fonts (`Outfit` and `Inter`) and `lucide_icons` inside a custom modern indigo/glassmorphism theme.
+
+6.3 BACKEND & CLOUD INFRASTRUCTURE
+• Cloud Platform: Supabase (Serverless PostgreSQL).
+• Communication: RESTful JSON over HTTPS and WebSockets for real-time profile balance updates.
+• Security: Cryptographic PIN hashing and local device keychain isolation.
+
+================================================================================
+7. KEY FUNCTIONAL MODULES
+================================================================================
+1. Account Identification & Cross-Device Login Module:
+   Allows users to enter their phone number on any device. The system normalizes digits across different international/local formats (`+234...`, `080...`) and queries cloud profiles to authenticate credentials and restore balance states immediately.
+
+2. Dual-Factor Authentication Gatekeeper:
+   Enforces PIN verification upon account identification and triggers local biometric fingerprint checks before authorizing high-value transfers or account settings changes.
+
+3. Financial Assets Dashboard:
+   Presents a consolidated view of Main Account Balance, Safebox Savings Balance, and Outstanding Loan Liabilities with toggle-able privacy masking (`isBalanceVisible`).
+
+4. Peer-to-Peer Transfer & Payout Engine:
+   Processes instantaneous account-to-account transfers and simulated bank payouts, generating auditable digital receipts with unique transaction reference IDs (`Ref: DEP/WTH/TRF-...`).
+
+5. Safebox Vault & Micro-Loan System:
+   Enables users to lock excess capital into a savings vault to enforce financial discipline, and provides an instant micro-credit disbursement engine that adds liquidity to the main wallet when needed.
+
+6. Utility Bill Payment Hub:
+   Dedicated checkout interface supporting Airtime renewals, Data bundle subscriptions, Electricity prepaid tokens, Cable TV payments, and Sports Betting account funding.
+
+7. QR Scan-to-Pay Engine:
+   Generates personalized account QR codes and provides a live camera viewfinder (`mobile_scanner`) to scan merchant or recipient QR codes for rapid checkout.
+
+================================================================================
+8. DATABASE SCHEMA & RELATIONAL MODELS
+================================================================================
+The cloud database structure consists of three core relational tables:
+
+8.1 TABLE: profiles
+• user_id (UUID, Primary Key): Unique account identifier linked to Supabase Auth.
+• full_name (VARCHAR): Customer's registered full name.
+• phone_number (VARCHAR, Unique): Primary contact and account identification key.
+• pin (VARCHAR): Security PIN used for secondary authentication.
+• account_no (VARCHAR, Unique): 10-digit unique wallet account number.
+• balance (DECIMAL): Main spending wallet liquid balance.
+• safebox_balance (DECIMAL): Total savings locked in the Safebox vault.
+• loan_balance (DECIMAL): Total outstanding micro-loan debt.
+• kyc_tier (VARCHAR): Customer verification tier (e.g., Tier 3 Verified).
+• profile_picture_url (TEXT): Avatar image or DiceBear seed reference.
+
+8.2 TABLE: transactions
+• id (UUID, Primary Key): Unique transaction identifier.
+• user_id (UUID, Foreign Key -> profiles.user_id): Owner of the transaction ledger entry.
+• title (VARCHAR): Short transaction description (e.g., "Transfer to John Adam").
+• subtitle (VARCHAR): Institution or reference details (e.g., "SmartPay • 9023456781").
+• amount (VARCHAR): Formatted financial string with debit/credit indicators (e.g., "- ₦4,500.00").
+• is_debit (BOOLEAN): Flag determining whether the transaction is an inflow or outflow.
+• status (VARCHAR): Completion status ("Successful", "Pending", "Failed").
+• created_at (TIMESTAMP): ISO-8601 timestamp of transaction execution.
+
+
+8.3 TABLE: biometric_login_logs
+• id (BIGINT, Primary Key): Auto-incrementing audit log entry ID.
+• user_id (UUID, Foreign Key -> profiles.user_id): User attempting authentication.
+• auth_method (VARCHAR): Type of check performed ("fingerprint" vs "pin").
+• is_successful (BOOLEAN): Authentication outcome result.
+• device_info (VARCHAR): Host device platform metadata (`defaultTargetPlatform`).
+• created_at (TIMESTAMP): Timestamp of login attempt.
+
+================================================================================
+9. HARDWARE AND SOFTWARE REQUIREMENTS
+================================================================================
+9.1 DEVELOPMENT REQUIREMENTS
+• Operating System: Linux / macOS / Windows 11 64-bit.
+• Processor: Intel Core i5 / AMD Ryzen 5 or higher (8GB+ RAM recommended).
+• IDE & SDKs: Visual Studio Code or Android Studio with Flutter SDK (^3.11.5) & Dart (^3.11.0).
+
+9.2 TARGET DEVICE REQUIREMENTS (END USERS)
+• Mobile OS: Android 8.0 (API Level 26) or iOS 13.0+.
+• Hardware: Integrated fingerprint sensor (recommended for full biometric experience).
+• Network: Active Wi-Fi or 4G/5G mobile data connectivity for cloud synchronization.
+
+================================================================================
+10. EXPECTED RESULTS & CONTRIBUTIONS TO KNOWLEDGE
+================================================================================
+Upon completion, the SmartPay project will yield:
+1. A production-ready, highly secure mobile wallet application demonstrating dual-factor local biometrics inside Flutter.
+2. A resilient cross-device cloud architecture allowing frictionless session restoration and multi-phone account portability without security trade-offs.
+3. An auditable, transparent security model that empowers users with real-time biometric login attempt logs.
+4. An empirical demonstration of how integrated value-added modules (Safebox and Loans) improve user engagement and financial discipline within mobile payment ecosystems.
+
+================================================================================
+11. PROJECT TIMELINE & WORK BREAKDOWN STRUCTURE
+================================================================================
+Phase 1 (Weeks 1-2): Requirement Analysis, Architectural Setup, and UI/UX Prototyping.
+Phase 2 (Weeks 3-4): Supabase Database Schema Setup, RLS Configuration, and Auth Engine.
+Phase 3 (Weeks 5-6): Dual-Factor Biometric (`local_auth`) & Cross-Device Login Implementation.
+Phase 4 (Weeks 7-8): Core Ledger, Transfers, Safebox Vault, and Micro-Loan Engine Development.
+Phase 5 (Weeks 9-10): QR Code Generator/Scanner & Utility Payment Hub Integration.
+Phase 6 (Weeks 11-12): Comprehensive Regression Testing, Bug Fixing, and Documentation/Proposal Defense.
+================================================================================

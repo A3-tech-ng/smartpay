@@ -1,0 +1,494 @@
+AI Agent Prompt – Build a Production-Quality AI Face Recognition System for SmartPay
+
+You are a senior AI Engineer, Computer Vision Engineer, Python FastAPI Engineer, Flutter Engineer, and Cybersecurity Engineer. Your task is to build a complete, production-quality AI-powered facial recognition system for the SmartPay application.
+
+The system must be highly modular, secure, fast, and reliable. The complete face recognition pipeline must run through the Python FastAPI backend, while Flutter is responsible only for the user interface, camera preview, and communication with the backend.
+
+Technology Stack
+
+Use the following technologies:
+
+Flutter
+Python FastAPI
+OpenCV
+MediaPipe Face Mesh
+dlib Facial Landmark Predictor (68 landmarks) or MediaPipe Face Landmarker
+InsightFace (preferred) or FaceNet/ArcFace with ResNet backbone
+ONNX Runtime or PyTorch
+NumPy
+Supabase PostgreSQL
+Supabase Storage
+Android Biometric API (Fingerprint)
+Fernet (AES encryption for biometric templates)
+Overall AI Workflow
+
+The AI must perform the following stages:
+
+Live face detection
+Face alignment
+Face quality assessment
+Lighting analysis
+Liveness detection
+Auto capture
+Face embedding generation
+Encryption
+Secure storage
+Identity comparison
+Authentication decision
+Camera Interface
+
+When Register with Face, Login with Face, or Verify Payment is selected:
+
+Immediately open the front camera.
+
+Display a live preview.
+
+Show a large animated circular guide at the center.
+
+The circle must remain visible before and during detection.
+
+Circle colors:
+
+Gray
+
+Waiting for face.
+
+Yellow
+
+Face detected but not yet valid.
+
+Green
+
+Face is perfectly aligned.
+
+Real-Time Face Detection
+
+Continuously detect:
+
+Exactly one face
+
+Face centered
+
+Correct distance
+
+Correct head angle
+
+Eyes visible
+
+Nose visible
+
+Mouth visible
+
+Entire face inside circle
+
+Reject immediately if:
+
+More than one face
+
+Face too close
+
+Face too far
+
+Face partially outside
+
+Camera shaking
+
+Heavy blur
+
+Display helpful instructions such as:
+
+Move closer
+
+Move farther
+
+Center your face
+
+Only one face allowed
+
+Hold your phone steady
+
+Lighting AI
+
+Continuously analyze:
+
+Brightness
+
+Exposure
+
+Contrast
+
+Blur
+
+Sharpness
+
+If lighting is poor:
+
+Display:
+
+Lighting is too low.
+
+If lighting is too bright:
+
+Display:
+
+Too much light detected.
+
+Use front camera exposure information if available.
+
+AI Liveness Detection
+
+Use AI to prevent spoofing.
+
+Facial Landmark Detection
+
+Use an AI model to detect 68 facial landmarks.
+
+Calculate:
+
+Eye Aspect Ratio (EAR)
+
+Use EAR to detect:
+
+Natural blinking
+
+Eye opening
+
+Eye closing
+
+The blink must happen in real time.
+
+The system must not accept:
+
+Photographs
+
+Screens
+
+Video replays
+
+Masks
+
+Static images
+
+Random Challenge
+
+Randomly request one challenge:
+
+Blink twice
+
+Turn left
+
+Turn right
+
+Smile
+
+Look up
+
+Look down
+
+The challenge must change randomly.
+
+Automatic Capture
+
+Never display a Capture button.
+
+Automatically capture only after ALL conditions are satisfied:
+
+Face centered
+
+Lighting acceptable
+
+Sharp image
+
+Liveness passed
+
+Stable face
+
+Blink detected
+
+After approximately one second of stability:
+
+Automatically capture.
+
+Processing Screen
+
+Immediately after capture display:
+
+Analyzing Face...
+
+██████████░░░░░
+
+Detecting landmarks...
+
+Checking liveness...
+
+Extracting features...
+
+Generating AI embedding...
+
+Encrypting biometric template...
+
+Uploading securely...
+
+Please wait...
+
+AI Face Recognition
+
+Use Deep Learning.
+
+The captured image must be processed by a pre-trained ResNet neural network.
+
+Recommended models:
+
+InsightFace
+
+ArcFace
+
+FaceNet
+
+The AI extracts a unique 128-dimensional facial embedding representing:
+
+Eye distance
+
+Nose bridge
+
+Jawline
+
+Cheekbone geometry
+
+Facial proportions
+
+Never compare images directly.
+
+Always compare embeddings.
+
+Python Backend Responsibilities
+
+Python FastAPI must perform:
+
+Image validation
+
+Face detection
+
+Face alignment
+
+Background normalization
+
+Lighting normalization
+
+Landmark detection
+
+Blink detection
+
+Quality assessment
+
+Embedding generation
+
+Embedding encryption
+
+Database communication
+
+Similarity calculation
+
+Decision making
+
+Flutter must never perform face recognition.
+
+Registration
+
+Generate:
+
+128-dimensional embedding
+
+Quality score
+
+Liveness score
+
+Timestamp
+
+Model version
+
+Encrypt the embedding using Fernet before storage.
+
+Store inside Supabase:
+
+User ID
+
+Encrypted embedding
+
+Model version
+
+Registration date
+
+Image quality score
+
+Liveness result
+
+Optionally store the original image securely in Supabase Storage if required.
+
+Login
+
+Repeat the complete AI pipeline.
+
+Generate a new embedding.
+
+Retrieve the encrypted embedding.
+
+Decrypt securely.
+
+Compare embeddings.
+
+Use Euclidean Distance or Cosine Similarity.
+
+Decision rules:
+
+If similarity score meets the configured threshold (for example, equivalent to about an 80% confidence or an appropriate Euclidean distance threshold determined during testing):
+
+Authentication Successful
+
+Otherwise:
+
+Authentication Failed
+
+The threshold should be configurable by the administrator rather than hard-coded.
+
+Display:
+
+Face Match: 87%
+
+Authentication Successful
+
+or
+
+Face Match: 64%
+
+Authentication Failed
+
+Payment Verification
+
+Before approving sensitive transactions:
+
+Repeat:
+
+Camera
+
+Detection
+
+Lighting
+
+Blink
+
+Liveness
+
+Auto capture
+
+Embedding
+
+Comparison
+
+If the threshold is met:
+
+Payment Authorized
+
+Otherwise:
+
+Face Verification Failed
+
+AI Decision Pipeline
+
+AI should make decisions in this order:
+
+Face detected?
+
+↓
+
+Single face?
+
+↓
+
+Good lighting?
+
+↓
+
+Sharp image?
+
+↓
+
+Blink detected?
+
+↓
+
+Liveness passed?
+
+↓
+
+Generate embedding
+
+↓
+
+Decrypt stored embedding
+
+↓
+
+Compare embeddings
+
+↓
+
+Threshold satisfied?
+
+↓
+
+Authentication Successful
+
+Security
+
+Never store passwords inside Python.
+
+Never store plain embeddings.
+
+Encrypt biometric templates before storage.
+
+Use HTTPS.
+
+Prevent replay attacks.
+
+Log authentication events without exposing biometric information.
+
+Reject screenshots and photos.
+
+Performance Goals
+
+Face detection:
+
+<100 ms
+
+Landmark detection:
+
+<100 ms
+
+Embedding generation:
+
+<300 ms
+
+Registration:
+
+<3 seconds
+
+Authentication:
+
+<2 seconds
+
+User Experience
+
+The application should feel like a modern banking app.
+
+Animations should be smooth.
+
+Camera should respond instantly.
+
+Processing should display progress.
+
+Error messages should be clear.
+
+Everything should happen automatically with no unnecessary user interaction.
+
+The face recognition system should be modular, maintainable, well-documented, and optimized for accuracy, security, and real-time performance. It should integrate seamlessly with Supabase and the existing SmartPay architecture while following biometric security best practices.

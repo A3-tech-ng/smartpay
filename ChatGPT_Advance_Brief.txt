@@ -1,0 +1,100 @@
+# PROJECT BRIEF & ARCHITECTURAL OVERVIEW FOR CHATGPT
+# Project Name: Biometric Payment Gateway (Flutter + Supabase FinTech App)
+# Target Use: Copy and paste this entire prompt to give any AI assistant complete context before requesting advanced features or code modifications.
+
+--------------------------------------------------------------------------------
+1. PROJECT IDENTIFICATION & ACADEMIC CONTEXT
+--------------------------------------------------------------------------------
+• Project Title: Biometric Payment Gateway
+• Type: Final Year Computer Science / Software Engineering Capstone Project
+• Core Value Proposition: A cloud-synchronized, cross-device mobile financial gateway enforcing strict Dual-Factor Biometric Authentication (Hardware Fingerprint via local_auth + Encrypted Application PIN).
+• Rebranding Status: Complete. The application was formerly prototyped as "SmartPay" but has been fully rebranded across all UI strings, deep links (`biometricgateway://`), backend fallbacks, and native Android manifests (`AndroidManifest.xml`) to "Biometric Payment Gateway."
+
+--------------------------------------------------------------------------------
+2. TECHNICAL STACK & LIBRARIES
+--------------------------------------------------------------------------------
+• Presentation Layer (Frontend): Flutter (Dart) using Material 3 (M3) Design System.
+• Theme & Aesthetics: Premium Deep Indigo (`#1E1B4B`) and Emerald Green (`#10B981`) gradient design with dark mode support and custom app icon (`imam.jpg`).
+• Backend & Database: Supabase PostgreSQL (hosted cloud instance with Row-Level Security policies and real-time websocket subscriptions).
+• Key Flutter Dependencies (`pubspec.yaml`):
+  - `local_auth`: Native Android BiometricPrompt / iOS Secure Enclave integration for hardware-backed fingerprint verification.
+  - `supabase_flutter`: Cloud database, real-time streams, auth, and ledger interaction.
+  - `shared_preferences`: Local encrypted session caching, PIN persistence, and onboarding state.
+  - `qr_flutter` & `mobile_scanner`: QR Code generation and live camera scan-to-pay functionality (`biometricgateway://` scheme).
+  - `pdf` & `printing`: Instant transaction receipt generation and sharing.
+  - `google_fonts`: Modern typography (`Inter`, `Outfit`, `Roboto`).
+
+--------------------------------------------------------------------------------
+3. CORE SECURITY & AUTHENTICATION ARCHITECTURE
+--------------------------------------------------------------------------------
+The application enforces a rigorous, multi-layered Dual-Factor Authentication (2FA) security model:
+
+A. Identification & Cross-Device Portability (No Device-Silos):
+   - Accounts are indexed uniquely by verified mobile phone numbers (`profiles` table).
+   - Unlike legacy apps that lock accounts to a single physical phone IMEI, users can log into their exact financial profile from any Android device.
+   - When a user enters their phone number on any device, the system queries Supabase (`profiles` lookup) to confirm account existence before initiating dual-factor verification.
+
+B. Factor 1: Hardware Biometric Enforcement (`local_auth`):
+   - The app triggers the OS-level biometric prompt.
+   - Fingerprint verification takes place entirely inside the device's hardware Secure Enclave / Trusted Execution Environment (TEE). No raw biometric data leaves the device or touches application memory.
+   - Note on Deprecations: All previous simulated face recognition fallbacks and external Python face recognition processing servers have been EXPLICITLY REMOVED AND DEPRECATED to eliminate third-party server vulnerabilities and processing latency.
+
+C. Factor 2: Encrypted 4-Digit Application PIN:
+   - Upon confirmed hardware fingerprint verification, the user inputs their 4-digit security PIN via a secure in-app keypad.
+   - Once both factors pass, the system issues a secure session token and synchronizes the user's financial balance, ledger, Safebox, and active loans in real time.
+
+D. Forensic Cloud Security Auditing (`biometric_login_logs`):
+   - Every single login attempt across any device logs an immutable record inside the Supabase `biometric_login_logs` table (capturing `user_id`, device metadata, verification method, success state, and timestamp).
+
+--------------------------------------------------------------------------------
+4. CURRENT FUNCTIONAL FEATURES & MODULES
+--------------------------------------------------------------------------------
+1. Dashboard & Real-Time Financial Ledger (`home_screen.dart`):
+   - Live balance cards, quick-action grid, and real-time transaction ledger.
+   - Peer-to-Peer Account Transfers: Instant fund transfers between users by account number (`210...`) with balance verification guards and automated fee calculation.
+   - Transaction Receipts: One-click PDF receipt export and sharing (`TXN-...` reference).
+
+2. Safebox Savings Vaults:
+   - Time-locked savings containers allowing users to isolate funds from daily spendable balances.
+   - Visual progress indicators, target amount tracking, and early withdrawal protection.
+
+3. Automated Micro-Loan Hub:
+   - Interactive borrowing slider for instant micro-credit requests.
+   - Automatic 5% interest computation, repayment scheduling, and active borrowing state indicators.
+
+4. Dynamic QR Code Scan-to-Pay & Utility Hub:
+   - QR Code Checkout: Live camera overlay (`mobile_scanner`) parsing `biometricgateway://` URIs for instantaneous retail checkout.
+   - Utility Bill Gateway: Multi-category bill payment portal supporting Airtime, Internet Data, Electricity bills, Cable TV subscriptions, and Sports Betting wallet top-ups.
+
+5. AI Financial Assistant & Admin Portal:
+   - Built-in AI chat assistant for answering user questions and financial queries.
+   - Dedicated Admin Dashboard (`admin_dashboard_screen.dart` & `admin_login_screen.dart`) for overseeing system transactions, fee structures, and KYC tiers.
+
+--------------------------------------------------------------------------------
+5. SUPABASE DATABASE SCHEMA OVERVIEW
+--------------------------------------------------------------------------------
+• `profiles`: `id` (UUID, PK), `phone_number` (Unique), `full_name`, `account_number` (`210...`), `pin_code` (Hashed), `balance` (Numeric), `safebox_balance` (Numeric), `loan_balance` (Numeric), `kyc_tier` (Text), `avatar_url` (Text).
+• `transactions`: `id` (UUID, PK), `user_id` (FK), `sender_account`, `recipient_account`, `amount`, `fee`, `reference` (`TXN-...`), `type` (`transfer`, `deposit`, `withdrawal`, `bill_payment`), `status`, `created_at`.
+• `safebox_savings`: `id` (UUID, PK), `user_id` (FK), `title`, `target_amount`, `current_amount`, `maturity_date`, `status` (`active`, `completed`).
+• `loans`: `id` (UUID, PK), `user_id` (FK), `principal_amount`, `total_repayment`, `interest_rate` (5.0), `due_date`, `status` (`active`, `paid`).
+• `biometric_login_logs`: `id` (UUID, PK), `user_id` (FK), `device_info`, `login_method` (`fingerprint_pin`), `status` (`success`, `failed`), `timestamp`.
+
+--------------------------------------------------------------------------------
+6. ADVANCED IDEAS & NEXT STEPS FOR CHATGPT TO BUILD/OPTIMIZE
+--------------------------------------------------------------------------------
+When advancing this application with ChatGPT, consider requesting the following advanced features:
+1. Dynamic Biometric Step-Up Authentication (Risk-Based 2FA):
+   - Request ChatGPT to modify `home_screen.dart` transfer logic so that regular transfers (< 20,000 NGN) require only a PIN, but high-value transfers (>= 50,000 NGN) or Safebox withdrawals automatically trigger an immediate secondary `local_auth` fingerprint prompt ("Step-Up Biometric Authorization").
+
+2. Offline-First Biometric Transaction Queue (`hive` or `sqflite`):
+   - Ask ChatGPT to implement local caching so if the user loses network connectivity during a bill payment or QR checkout, the app verifies their fingerprint locally, stores the transaction in an encrypted offline queue, and automatically syncs with Supabase once network connectivity is restored.
+
+3. Automated Safebox Round-Up Savings Rule:
+   - Implement a background service/trigger where every time a user makes a transfer or pays a utility bill (e.g., 4,650 NGN), the app rounds up the spare change (350 NGN) and automatically deposits it into their Safebox vault.
+
+4. AI Financial Assistant Analytics Engine:
+   - Upgrade the existing AI chat assistant inside `home_screen.dart` to query the user's `transactions` table and generate personalized monthly spending breakdowns (e.g., "You spent 45% on Electricity and Airtime this month").
+
+5. Automated Credit Score Calculation for Micro-Loans:
+   - Ask ChatGPT to build a logic model inside `loans` creation where the maximum borrowing limit dynamically adjusts based on the user's historical transaction volume and on-time repayment records.
+================================================================================
