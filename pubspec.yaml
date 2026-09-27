@@ -38,7 +38,6 @@ dependencies:
   shared_preferences: ^2.2.0
   google_fonts: ^8.1.0
   provider: ^6.1.5+1
-  lucide_icons: ^0.257.0
   supabase_flutter: ^2.8.4
   http: ^1.2.0
   image_picker: ^1.1.2
@@ -51,9 +50,6 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-
-dependency_overrides:
-  lucide_icons: ^0.257.0
 
 
 # For information on the generic Dart part of this file, see the
